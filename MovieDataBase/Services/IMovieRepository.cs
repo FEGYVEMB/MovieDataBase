@@ -6,13 +6,15 @@
     public void Remove(Movie movie);
 }
 
-public class Movie 
+public class Movie
 {
     public string Name { get; set; }
-        
+    public string id { get; set; }
+      
     public Movie(string name)
     {
         Name = name;
+        // this is the unique id manufacturer
         var id = Guid.NewGuid();
     }
 

@@ -19,7 +19,7 @@ namespace MovieDataBase.Controllers
 
         [HttpGet("movies")]
         public List<Movie> GetMovies()
-        { 
+        {
             _logger.LogInformation($"getmovies was called...");
             return _movieRepository.GetAllMovies();
         }
@@ -34,13 +34,7 @@ namespace MovieDataBase.Controllers
         [HttpDelete("removemovie")]
         public void Delete([FromBody]string title)
         {
-            foreach(Movie movie in _movieRepository.GetAllMovies())
-            {
-                if(movie.Equals(title))
-                {
-                    _movieRepository.Remove(movie);
-                }
-            }
+
         }
     }
 }
