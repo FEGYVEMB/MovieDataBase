@@ -3,7 +3,9 @@
     public List<Movie> GetAllMovies();
     public void Add(string title);
 
-    public void Remove(Movie movie);
+    public void RemoveMovie(Movie movie);
+
+    public void UpdateMovie(Movie movie, string updatedTitle);
 }
 
 public class Movie
@@ -15,12 +17,12 @@ public class Movie
     {
         Name = name;
         // this is the unique id manufacturer
-        var id = Guid.NewGuid();
+        id = Guid.NewGuid().ToString();
     }
 
-    public bool Equals(string title)
+    public bool Equals(string targetId)
     {
-        return Name == title;
+        return targetId == id;
     }
 }
 
@@ -45,9 +47,14 @@ public class InMemoryMovieRepository : IMovieRepository
         return _movies;
     }
 
-    public void Remove(Movie movie)
+    public void RemoveMovie(Movie movie)
     {
         _movies.Remove(movie);
     }
-}
 
+    public void UpdateMovie(Movie movie, string updatedTitle)
+    {
+        _movies.Where(m => m.Equals(movie)).First().Name = updatedTitle;
+    }
+
+}

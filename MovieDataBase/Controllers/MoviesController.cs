@@ -7,7 +7,6 @@ namespace MovieDataBase.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly ILogger<MoviesController> _logger;
-        // this is our in memory repo of movies (?)
         private readonly IMovieRepository _movieRepository;
 
         public MoviesController(ILogger<MoviesController> logger, IMovieRepository movieRepository)
@@ -31,10 +30,22 @@ namespace MovieDataBase.Controllers
             _movieRepository.Add(title);
         }
 
-        [HttpDelete("removemovie")]
-        public void Delete([FromBody]string title)
+        [HttpPatch("updatemovie")]
+        public List<Movie> Update(string title, string correctTitle)
         {
+            _logger.LogInformation($"Update request has been called to update the movie title of movie: \"{title}\" to: \"{correctTitle}\".");
+            Movie targetMovie = _movieRepository.GetAllMovies().Where(m => m.Name.Equals(title)).First();
+            _movieRepository.UpdateMovie(targetMovie, correctTitle);
 
+            return _movieRepository.GetAllMovies();
+        }
+
+        [HttpDelete("removemovie")]
+        public void Delete([FromBody]string id)
+        {
+            _logger.LogInformation($"removemovie request has been called to remove movie with the following ID: {id}");
+            Movie targetMovie = _movieRepository.GetAllMovies().Where(m => m.Equals(id)).FirstOrDefault();
+            _movieRepository.RemoveMovie(targetMovie);
         }
     }
 }
