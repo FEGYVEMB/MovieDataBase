@@ -3,9 +3,9 @@
     public List<Movie> GetAllMovies();
     public void Add(string title);
 
-    public void RemoveMovie(Movie movie);
+    public void RemoveMovie(string id);
 
-    public void UpdateMovie(Movie movie, string updatedTitle);
+    public void UpdateMovie(string id, string updatedTitle);
 }
 
 public class Movie
@@ -20,10 +20,6 @@ public class Movie
         id = Guid.NewGuid().ToString();
     }
 
-    public bool Equals(string targetId)
-    {
-        return targetId == id;
-    }
 }
 
 public class InMemoryMovieRepository : IMovieRepository
@@ -47,14 +43,16 @@ public class InMemoryMovieRepository : IMovieRepository
         return _movies;
     }
 
-    public void RemoveMovie(Movie movie)
+    public void RemoveMovie(string id)
     {
-        _movies.Remove(movie);
+        
+        var deleted = _movies.RemoveAll(m => m.id == id);
+        if(deleted == 0) throw new KeyNotFoundException();
     }
 
-    public void UpdateMovie(Movie movie, string updatedTitle)
+    public void UpdateMovie(string id, string updatedTitle)
     {
-        _movies.Where(m => m.Equals(movie)).First().Name = updatedTitle;
+        _movies.Where(m => m.id == id).First().Name = updatedTitle;
     }
 
 }

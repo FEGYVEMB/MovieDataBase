@@ -13,39 +13,49 @@ namespace MovieDataBase.Controllers
         {
             _logger = logger;
             _movieRepository = movieRepository;
-            _logger.LogInformation($"Movies ctor initialized: {GetHashCode()}");
+            _logger.LogDebug($"Movies ctor initialized: {GetHashCode()}");
         }
 
-        [HttpGet("movies")]
+        [HttpGet("Movies")]
         public List<Movie> GetMovies()
         {
-            _logger.LogInformation($"getmovies was called...");
+            _logger.LogDebug($"getmovies was called...");
             return _movieRepository.GetAllMovies();
         }
 
-        [HttpPost("addmovie")]
+        [HttpPost("Add")]
         public void Post([FromBody]string title)
         {
             _logger.LogInformation($"Post1 was called to add movie titled \"{title}\".");
             _movieRepository.Add(title);
         }
 
-        [HttpPatch("updatemovie")]
-        public List<Movie> Update(string title, string correctTitle)
+        [HttpPatch("Update")]
+        public List<Movie> Update(string id, string correctTitle)
         {
-            _logger.LogInformation($"Update request has been called to update the movie title of movie: \"{title}\" to: \"{correctTitle}\".");
-            Movie targetMovie = _movieRepository.GetAllMovies().Where(m => m.Name.Equals(title)).First();
-            _movieRepository.UpdateMovie(targetMovie, correctTitle);
+            _logger.LogInformation($"Update request has been called to update the movie title of movie: \"{id}\" to: \"{correctTitle}\".");
+            _movieRepository.UpdateMovie(id, correctTitle);
 
             return _movieRepository.GetAllMovies();
         }
 
-        [HttpDelete("removemovie")]
-        public void Delete([FromBody]string id)
+
+        ///
+        [HttpDelete("Remove")]
+        public IActionResult Delete([FromBody]string id)
         {
+
+            try 
+            {
             _logger.LogInformation($"removemovie request has been called to remove movie with the following ID: {id}");
-            Movie targetMovie = _movieRepository.GetAllMovies().Where(m => m.Equals(id)).FirstOrDefault();
-            _movieRepository.RemoveMovie(targetMovie);
+            _movieRepository.RemoveMovie(id);
+
+            return Ok();
+
+            } catch (Exception e) 
+            {
+                return Ok();
+            }
         }
     }
 }
