@@ -1,6 +1,6 @@
 ﻿public interface IMovieRepository
 {
-    public List<Movie> GetAllMovies();
+    public Task<List<Movie>> GetAllMovies();
     public void Add(string title);
 
     public void RemoveMovie(string id);
@@ -19,12 +19,11 @@ public class Movie
         // this is the unique id manufacturer
         id = Guid.NewGuid().ToString();
     }
-
 }
 
 public class InMemoryMovieRepository : IMovieRepository
 {
-    private List<Movie> _movies = new List<Movie>();
+    private readonly List<Movie> _movies = new List<Movie>();
 
     public InMemoryMovieRepository()
     {
@@ -38,21 +37,20 @@ public class InMemoryMovieRepository : IMovieRepository
         _movies.Add(movie);
     }
 
-    public List<Movie> GetAllMovies()
+    public async Task<List<Movie>> GetAllMovies()
     {
+        await Task.Delay(2000);
         return _movies;
     }
 
-    public void RemoveMovie(string id)
+    public async void RemoveMovie(string id)
     {
-        
-        var deleted = _movies.RemoveAll(m => m.id == id);
-        if(deleted == 0) throw new KeyNotFoundException();
+        var deleted = await Task.Run(() => _movies.RemoveAll(m => m.id == id));
+        if (deleted == 0) throw new KeyNotFoundException();
     }
 
     public void UpdateMovie(string id, string updatedTitle)
     {
         _movies.Where(m => m.id == id).First().Name = updatedTitle;
     }
-
 }
