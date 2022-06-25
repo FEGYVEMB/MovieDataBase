@@ -20,7 +20,6 @@ namespace MovieDataBase.Controllers
         public Task<List<Movie>> GetMovies()
         {
             _logger.LogDebug($"getmovies was called...");
-
             return _movieRepository.GetAllMovies();
         }
 
