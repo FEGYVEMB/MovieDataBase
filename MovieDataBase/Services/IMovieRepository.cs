@@ -11,13 +11,13 @@
 public class Movie
 {
     public string Name { get; set; }
-    public string id { get; set; }
-      
+    public string Id { get; set; }
+
     public Movie(string name)
     {
         Name = name;
         // this is the unique id manufacturer
-        id = Guid.NewGuid().ToString();
+        Id = Guid.NewGuid().ToString();
     }
 }
 
@@ -39,18 +39,46 @@ public class InMemoryMovieRepository : IMovieRepository
 
     public async Task<List<Movie>> GetAllMovies()
     {
-        await Task.Delay(2000);
-        return _movies;
+        return await Task.FromResult(_movies);
     }
 
     public async void RemoveMovie(string id)
     {
-        var deleted = await Task.Run(() => _movies.RemoveAll(m => m.id == id));
+        var deleted = await Task.Run(() => _movies.RemoveAll(m => m.Id == id));
         if (deleted == 0) throw new KeyNotFoundException();
+    }
+
+    public async void UpdateMovie(string id, string updatedTitle)
+    {
+        var updateTask = await Task.FromResult(_movies.Where(m => m.Id == id).First().Name = updatedTitle);
+    }
+}
+
+public class DbMovieRepository : IMovieRepository
+{
+    private readonly List<Movie> _movies;
+
+    public DbMovieRepository()
+    {
+
+    }
+
+    public async Task<List<Movie>> GetAllMovies()
+    {
+            return null;
+    }
+
+    public void Add(string title)
+    {
+    }
+
+    public void RemoveMovie(string id)
+    {
+
     }
 
     public void UpdateMovie(string id, string updatedTitle)
     {
-        _movies.Where(m => m.id == id).First().Name = updatedTitle;
+
     }
 }
