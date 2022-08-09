@@ -16,11 +16,18 @@ namespace MovieDataBase.Controllers
             _logger.LogDebug($"Movies ctor initialized: {GetHashCode()}");
         }
 
-        [HttpGet("Get")]
+        [HttpGet("GetAll")]
         public Task<List<Movie>> GetMovies()
         {
             _logger.LogDebug($"getmovies was called...");
             return _movieRepository.GetAllMovies();
+        }
+
+        [HttpGet("GetById")]
+        public async Task<Movie> GetMovieById([FromHeader] string id)
+        {
+            _logger.LogDebug($"getmoviebyid was called for id: {id}...");
+            return await _movieRepository.GetMovieById(id);
         }
 
         [HttpPost("Add")]
@@ -40,17 +47,19 @@ namespace MovieDataBase.Controllers
         }
 
         [HttpDelete("Remove")]
-        public IActionResult Delete([FromBody] string id)
+        public async Task<IActionResult> Delete([FromBody] string id)
         {
             try
             {
                 _logger.LogInformation($"remove request has been called to remove movie with the following ID: {id}");
                 _movieRepository.RemoveMovie(id);
+
                 return Ok();
             }
             catch (Exception e)
             {
                 _logger.LogInformation($"remove request has run into an exception");
+
                 return NoContent();
             }
         }
