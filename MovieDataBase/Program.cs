@@ -7,8 +7,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Dependency Injection magic - this will make the builder depend on the inmemorymovierepository class (?)
-builder.Services.AddSingleton<IMovieRepository, InMemoryMovieRepository>();
+// Dependency Injection magic - this will make the builder depend on the movie repo class
+builder.Services.AddSingleton<IMovieRepository, DbMovieRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

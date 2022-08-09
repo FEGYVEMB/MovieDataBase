@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Dapper;
 
 namespace MovieDataBase.Controllers
 {
@@ -45,14 +44,14 @@ namespace MovieDataBase.Controllers
         {
             try
             {
-                _logger.LogInformation($"removemovie request has been called to remove movie with the following ID: {id}");
+                _logger.LogInformation($"remove request has been called to remove movie with the following ID: {id}");
                 _movieRepository.RemoveMovie(id);
-
                 return Ok();
             }
             catch (Exception e)
             {
-                return Ok();
+                _logger.LogInformation($"remove request has run into an exception");
+                return NoContent();
             }
         }
     }
