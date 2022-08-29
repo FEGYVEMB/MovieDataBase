@@ -27,7 +27,15 @@ namespace MovieDataBase.Controllers
         public async Task<Movie> GetMovieById([FromHeader] string id)
         {
             _logger.LogDebug($"getmoviebyid was called for id: {id}...");
-            return await _movieRepository.GetMovieById(id);
+
+            if(await _movieRepository.MovieExists(id))
+            {
+                return await _movieRepository.GetMovieById(id);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [HttpPost("Add")]

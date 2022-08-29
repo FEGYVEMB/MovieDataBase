@@ -1,3 +1,5 @@
+using Npgsql;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,7 +10,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Dependency Injection magic
-builder.Services.AddSingleton<IMovieRepository, DbMovieRepository>();
+builder.Services.AddSingleton<IMovieRepository, DbMovieRepository>(); // factory so simple it is not even factory
+builder.Services.AddSingleton<NpgsqlConnection>(serviceProvider => { 
+    var config = serviceProvider.GetService<IConfiguration>();
+    return new NpgsqlConnection(config.GetValue<string>("MovieDBConnectionString")); 
+    }); // factory
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
