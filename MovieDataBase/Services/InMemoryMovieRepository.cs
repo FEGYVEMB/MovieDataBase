@@ -14,9 +14,9 @@ public class InMemoryMovieRepository : IMovieRepository
         _movies.Add(movie);
     }
     
-    public Task<Movie> GetMovieById(string id)
+    public async Task<Movie> GetMovieById(string id)
     {
-        return null;
+        return await Task.Run(_movies.Where(m => m.Id == id).First);
     }
 
     public async Task<List<Movie>> GetAllMovies()
@@ -37,6 +37,10 @@ public class InMemoryMovieRepository : IMovieRepository
 
     public async Task<bool> MovieExists(string id) 
     {
-        return await Task.FromResult(false);
+        if(await Task.FromResult(_movies.Where(m => m.Id == id).First().Id == id))
+        {
+            return true;
+        }
+        else return false;
     }
 }

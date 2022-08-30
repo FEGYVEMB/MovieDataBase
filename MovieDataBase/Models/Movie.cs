@@ -1,7 +1,7 @@
 public class Movie
 {
-    public string Title { get; set; }
-    public string Id { get; set; }
+    public string? Title { get; set; }
+    public string? Id { get; set; }
 
     public Movie(string title)
     {

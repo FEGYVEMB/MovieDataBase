@@ -34,7 +34,7 @@ namespace MovieDataBase.Controllers
             }
             else
             {
-                return null;
+                return new Movie();
             }
         }
 
@@ -60,14 +60,13 @@ namespace MovieDataBase.Controllers
             try
             {
                 _logger.LogInformation($"remove request has been called to remove movie with the following ID: {id}");
-                _movieRepository.RemoveMovie(id);
+                await Task.Run(() =>_movieRepository.RemoveMovie(id));
 
                 return Ok();
             }
             catch (Exception e)
             {
-                _logger.LogInformation($"remove request has run into an exception");
-
+                _logger.LogInformation($"remove request has run into an exception: {e}");
                 return NoContent();
             }
         }
