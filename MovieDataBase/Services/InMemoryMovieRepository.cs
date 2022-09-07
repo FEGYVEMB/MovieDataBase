@@ -8,29 +8,29 @@ public class InMemoryMovieRepository : IMovieRepository
         _movies.Add(new Movie("Last Action Hero"));
     }
 
-    public void Add(string title)
+    public void AddAsync(string title)
     {
         Movie movie = new Movie(title);
         _movies.Add(movie);
     }
     
-    public async Task<Movie> GetMovieById(string id)
+    public async Task<Movie> GetMovieByIdAsync(string id)
     {
         return await Task.Run(_movies.Where(m => m.Id == id).First);
     }
 
-    public async Task<List<Movie>> GetAllMovies()
+    public async Task<List<Movie>> GetAllMoviesAsync()
     {
         return await Task.FromResult(_movies);
     }
 
-    public async void RemoveMovie(string id)
+    public async void RemoveMovieAsync(string id)
     {
         var deleted = await Task.Run(() => _movies.RemoveAll(m => m.Id == id));
         if (deleted == 0) throw new KeyNotFoundException();
     }
 
-    public async void UpdateMovie(string id, string updatedTitle)
+    public async void UpdateMovieAsync(string id, string updatedTitle)
     {
         var updateTask = await Task.FromResult(_movies.Where(m => m.Id == id).First().Title = updatedTitle);
     }

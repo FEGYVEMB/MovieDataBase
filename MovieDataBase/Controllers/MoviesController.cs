@@ -20,21 +20,29 @@ namespace MovieDataBase.Controllers
         public Task<List<Movie>> GetMovies()
         {
             _logger.LogDebug($"getmovies was called...");
-            return _movieRepository.GetAllMovies();
+            return _movieRepository.GetAllMoviesAsync();
         }
 
         [HttpGet("GetById")]
-        public async Task<Movie> GetMovieById([FromHeader] string id)
+        public async Task<IActionResult> GetMovieById([FromHeader] string id)
         {
             _logger.LogDebug($"getmoviebyid was called for id: {id}...");
+            // var result = await _movieRepository.GetMovieByIdAsync(id);
 
-            if(await _movieRepository.MovieExists(id))
+            // if(result.Title == null)
+            // {
+            //     return NotFound();
+            // }
+
+            // return Ok(result);
+
+            try
             {
-                return await _movieRepository.GetMovieById(id);
+                return Ok(await _movieRepository.GetMovieByIdAsync(id));
             }
-            else
+            catch(Exception e)
             {
-                return new Movie();
+                return NotFound();
             }
         }
 
@@ -42,16 +50,16 @@ namespace MovieDataBase.Controllers
         public void Post([FromBody] string title)
         {
             _logger.LogInformation($"Post1 was called to add movie titled \"{title}\".");
-            _movieRepository.Add(title);
+            _movieRepository.AddAsync(title);
         }
 
         [HttpPatch("Update")]
         public async Task<List<Movie>> Update(string id, string correctTitle)
         {
             _logger.LogInformation($"Update request has been called to update the movie title of movie: \"{id}\" to: \"{correctTitle}\".");
-            _movieRepository.UpdateMovie(id, correctTitle);
+            _movieRepository.UpdateMovieAsync(id, correctTitle);
 
-            return await _movieRepository.GetAllMovies();
+            return await _movieRepository.GetAllMoviesAsync();
         }
 
         [HttpDelete("Remove")]
@@ -60,7 +68,7 @@ namespace MovieDataBase.Controllers
             try
             {
                 _logger.LogInformation($"remove request has been called to remove movie with the following ID: {id}");
-                await Task.Run(() =>_movieRepository.RemoveMovie(id));
+                await Task.Run(() =>_movieRepository.RemoveMovieAsync(id));
 
                 return Ok();
             }
