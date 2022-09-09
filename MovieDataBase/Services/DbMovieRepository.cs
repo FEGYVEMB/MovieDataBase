@@ -49,6 +49,11 @@ public class DbMovieRepository : IMovieRepository
     {
         using(var connection = new NpgsqlConnection(connectionString))
         {
+            if(!(await MovieExistsInDbAsync(connection, id)))
+            {
+                throw new Exception();
+            }
+
             await connection.ExecuteAsync($"delete from movies where id = '{id}';");
         }
     }
@@ -57,6 +62,11 @@ public class DbMovieRepository : IMovieRepository
     {
         using(var connection = new NpgsqlConnection(connectionString))
         {
+            if(!(await MovieExistsInDbAsync(connection, id)))
+            {
+                throw new Exception();
+            }
+            
             await connection.ExecuteAsync($"update movies set title = '{updatedTitle}' where id = '{id}';");
         }
     }
